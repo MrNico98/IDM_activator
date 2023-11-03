@@ -1,5 +1,5 @@
 # Change to the desktop directory
-cd "$env:temp"
+cd "$env:userprofile\Desktop"
 
 # Download the script from GitHub
 Invoke-WebRequest -Uri "https://github.com/MrNico98/IDM_activator/archive/refs/heads/main.zip" -OutFile "IDM_activator-main.zip"
