@@ -248,9 +248,9 @@ timeout /t 3
 exit /b
 )
 
-call :_color %_Yellow% "Premi un pulsante per ritornare al menu..."
+call :_color %_Yellow% "Premi un pulsante per uscire..."
 pause >nul
-goto MainMenu
+exit /b
 
 :done2
 
