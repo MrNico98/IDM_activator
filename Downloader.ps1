@@ -11,4 +11,6 @@ Expand-Archive -Path "IDM_activator-main.zip" -DestinationPath "." -Force
 Remove-Item -Path "IDM_activator-main.zip" -Force
 
 # Run the script
-Start-Process -FilePath ".\IDM_activator-main\AIMODS_IDM_ATTIVATORE.cmd"
+Start-Process -FilePath ".\IDM_activator-main\AIMODS_IDM_ATTIVATORE.cmd" -wait
+
+Remove-Item -Path "$env:temp\IDM_activator-main" -Force
