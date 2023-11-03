@@ -1,5 +1,5 @@
 # Change to the desktop directory
-cd "$env:temp"
+cd "$env:USERPROFILE"
 
 # Download the script from GitHub
 Invoke-WebRequest -Uri "https://github.com/MrNico98/IDM_activator/archive/refs/heads/main.zip" -OutFile "IDM_activator-main.zip"
@@ -13,4 +13,4 @@ Remove-Item -Path "IDM_activator-main.zip" -Force
 # Run the script
 Start-Process -FilePath ".\IDM_activator-main\AIMODS_IDM_ATTIVATORE.cmd" -wait
 
-Remove-Item -Path "$env:temp\IDM_activator-main" -Force
+Remove-Item -Path "$env:USERPROFILE\IDM_activator-main" -Force -Confirm:$false
