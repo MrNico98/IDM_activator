@@ -1,6 +1,6 @@
 # IDM Activator Script
 
-This repository contains a PowerShell script designed to activate Internet Download Manager (IDM) on Windows. The script automates the activation process for IDM, making it convenient for users. 🚀
+Welcome to the IDM Activator Script repository! This PowerShell script is crafted to effortlessly activate Internet Download Manager (IDM) on Windows, streamlining the activation process for users. 🚀
 
 [![Windows](https://img.shields.io/badge/Windows-OS-blue)](https://en.wikipedia.org/wiki/Microsoft_Windows)
 [![Language](https://img.shields.io/badge/language-PowerShell-blue)](https://docs.microsoft.com/en-us/powershell/)
@@ -9,22 +9,22 @@ This repository contains a PowerShell script designed to activate Internet Downl
 
 ## Usage
 
-Follow these steps to use the IDM Activator script:
+Let's dive into using the IDM Activator script:
 
 1. **Download the Script:**
    - Clone this repository or download the ZIP file from the [GitHub repository](https://github.com/LightYagami28/IDM_activator).
    - Extract the contents to a location of your choice.
 
 2. **Run the Script:**
-   - Open PowerShell as an administrator.
+   - Launch PowerShell as an administrator.
    - Navigate to the directory where you extracted the script.
-   - Run the following command:
+   - Execute the following command:
 
      ```powershell
      Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
      ```
 
-   - Run the script using the following command:
+   - Run the script using this command:
 
      ```powershell
      .\Downloader.ps1
@@ -45,24 +45,24 @@ Follow these steps to use the IDM Activator script:
 
 ## Security Updates
 
-This script has been updated to follow best practices for PowerShell scripting, enhancing security. The changes include:
+Our commitment to security is reflected in the following updates:
 
-- Replacing aliases with full cmdlet names for better readability and maintainability.
-- Safely handling sensitive information within the script.
-- Removing unnecessary variables and cleaning up resources after script execution.
+- Replaced aliases with full cmdlet names for improved readability and maintainability.
+- Safely handled sensitive information within the script.
+- Removed unnecessary variables and cleaned up resources after script execution.
 
 ## CheckSecurity.bat
 
-The `CheckSecurity.bat` file is a utility script that checks the security status of your system. Run it as an administrator to ensure that your system is ready for executing the IDM Activator script.
+The `CheckSecurity.bat` file serves as a utility script to verify your system's security status. Run it as an administrator to ensure your system is ready for executing the IDM Activator script.
 
 **Note:** Please use `CheckSecurity.bat` responsibly and only run it as an administrator.
 
 ## Disclaimer
 
-This script is provided for educational purposes only. Use it responsibly, and ensure compliance with IDM's licensing terms.
+This script is shared for educational purposes only. Please use it responsibly and ensure compliance with IDM's licensing terms.
 
-**Note:** This script is intended for Windows operating systems. Ensure that you have the necessary permissions to run PowerShell scripts on your system.
+**Note:** The script is designed for Windows operating systems. Make sure you have the necessary permissions to run PowerShell scripts on your system.
 
-For the latest version of IDM, [download here](https://t.me/+lx9FIsA0UB5iOTE0) 📥.
+To access the latest IDM version, [download here](https://t.me/+lx9FIsA0UB5iOTE0) 📥.
 
-🔒 **Disclaimer:** Please use this script responsibly and comply with IDM's licensing terms.
+🔒 **Disclaimer:** Please be aware that I do not assume any responsibility for the tool's usage. In case of a DMCA notice, I reserve the right to remove my repository.

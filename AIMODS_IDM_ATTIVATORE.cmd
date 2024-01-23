@@ -1,26 +1,20 @@
 @echo off
-setlocal DisableDelayedExpansion
+setlocal
 
-:: To activate, run the script with "/act" parameter or change 0 to 1 in the line below
+:: Activate by default, change to 1 if activation is needed
 set "_activate=1"
 
-:: To reset the activation and trial, run the script with "/res" parameter or change 0 to 1 in the line below
+:: Reset activation and trial, change to 1 if reset is needed
 set "_reset=0"
 
-:: If the value is changed in the lines above or parameter is used, then the script will run in unattended mode
-
-:: Add a custom name in IDM license info; prefer to write it in English in the line below after the equal sign
+:: Custom name in IDM license info; prefer English
 set "name=AIMODS"
-::========================================================================================================================================
+::====================================================================
 
-:: Set the Path variable; it helps if it is misconfigured in the system
-set "PATH=%SystemRoot%\System32;%SystemRoot%\System32\wbem;%SystemRoot%\System32\WindowsPowerShell\v1.0\"
-if exist "%SystemRoot%\Sysnative\reg.exe" (
-    set "PATH=%SystemRoot%\Sysnative;%SystemRoot%\Sysnative\wbem;%SystemRoot%\Sysnative\WindowsPowerShell\v1.0\;%PATH%"
-)
-
-:: Re-launch the script with x64 process if it was initiated by x86 process on x64-bit Windows
-:: or with ARM64 process if it was initiated by x86/ARM32 process on ARM64 Windows
+:: Set the Path variable; helps if misconfigured in the system
+set "PATH=%SystemRoot%\System32;%SystemRoot%\Sysnative;%PATH%"
+:: Re-launch the script with x64 process if initiated by x86 process on x64-bit Windows
+:: or with ARM64 process if initiated by x86/ARM32 process on ARM64 Windows
 
 set "_cmdf=%~f0"
 for %%# in (%*) do (
@@ -28,27 +22,23 @@ for %%# in (%*) do (
     if /i "%%#"=="r2" set r2=1
     if /i "%%#"=="-qedit" (
         reg add HKCU\Console /v QuickEdit /t REG_DWORD /d "1" /f >nul 2>&1
-        rem check the code below admin elevation to understand why it's here
+        rem Check the code below admin elevation to understand why it's here
     )
 )
 
 if exist %SystemRoot%\Sysnative\cmd.exe if not defined r1 (
-    setlocal EnableDelayedExpansion
     start %SystemRoot%\Sysnative\cmd.exe /c ""!_cmdf!" %* r1"
     exit /b
 )
 
-:: Re-launch the script with ARM32 process if it was initiated by x64 process on ARM64 Windows
-
+:: Re-launch the script with ARM32 process if initiated by x64 process on ARM64 Windows
 if exist %SystemRoot%\SysArm32\cmd.exe if %PROCESSOR_ARCHITECTURE%==AMD64 if not defined r2 (
-    setlocal EnableDelayedExpansion
     start %SystemRoot%\SysArm32\cmd.exe /c ""!_cmdf!" %* r2"
     exit /b
 )
 
-::========================================================================================================================================
-
-:: Check if Null service is working; it's important for the batch script
+::====================================================================
+:: Check if Null service is working; it's crucial for the batch script
 sc query Null | find /i "RUNNING" >nul 2>&1
 if %errorlevel% NEQ 0 (
     echo:
@@ -61,9 +51,7 @@ if %errorlevel% NEQ 0 (
     ping 127.0.0.1 -n 10 >nul
 )
 cls
-
-::===============================================================================================================================
-
+::===================================================================
 @echo off
 :: Check LF line ending
 pushd "%~dp0"
@@ -76,12 +64,11 @@ pushd "%~dp0"
     exit /b
 )
 popd
-
-::========================================================================================================================================
+::===================================================================
 
 cls
 color 07
-title AIMODS ATTIVAZIONE IDM
+title AIMODS IDM ACTIVATION
 
 set "_args="
 set "_elev="
@@ -100,8 +87,7 @@ if defined _args (
 for %%A in (%_activate% %_reset%) do (
     if "%%A"=="1" set "_unattended=1"
 )
-
-::========================================================================================================================================
+::===================================================================
 
 set "nul1=1>nul"
 set "nul2=2>nul"
@@ -145,22 +131,23 @@ set "line=______________________________________________________________________
 set "_buf={$W=$Host.UI.RawUI.WindowSize;$B=$Host.UI.RawUI.BufferSize;$W.Height=34;$B.Height=300;$Host.UI.RawUI.WindowSize=$W;$Host.UI.RawUI.BufferSize=$B;}"
 
 ::========================================================================================================================================
-
+::========================================================================================================================================
 if %winbuild% LSS 7600 (
     %nceline%
     echo Unsupported OS version Detected [%winbuild%].
-    echo Project is supported only for Windows 7/8/8.1/10/11 and their Server equivalent.
+    echo Project is supported only for Windows 7/8/8.1/10/11 and their Server equivalents.
     goto done2
 )
 
+:: Check if powershell.exe is available in the system
 for %%# in (powershell.exe) do @if "%%~$PATH:#"=="" (
     %nceline%
     echo Unable to find powershell.exe in the system.
     goto done2
 )
-
 ::========================================================================================================================================
-:: Elevate script as admin and pass arguments to prevent loop
+
+:: Elevate script as admin and pass arguments to prevent a loop
 >nul fltmc || (
     if not defined _elev %psc% "start cmd.exe -arg '/c \"!_PSarg:'=''!\"' -verb runas" && exit /b
     %eline%
@@ -168,7 +155,6 @@ for %%# in (powershell.exe) do @if "%%~$PATH:#"=="" (
     echo To do so, right-click on this script and select 'Run as administrator'.
     goto done2
 )
-
 ::========================================================================================================================================
 
 :: Disable QuickEdit for this cmd.exe session without making permanent changes to the registry
@@ -187,10 +173,9 @@ reg query HKCU\Console /v QuickEdit %nul2% | find /i "0x0" %nul1% || (
         exit /b
     )
 )
-
 ::========================================================================================================================================
 
-:: Check if script is running in a terminal app and relaunches it with conhost.exe if needed
+:: Check if the script is running in a terminal app and relaunches it with conhost.exe if needed
 
 if %_unattended%==1 set wtrel=1
 for %%# in (%_args%) do (
@@ -216,17 +201,15 @@ if %winbuild% GEQ 17763 (
         if /i "%%#"=="-wt" set terminal=
     )
 )
-
 ::========================================================================================================================================
-
 ::========================================================================================================================================
 
 @echo off
 cls
-title AIMODS ATTIVAZIONE IDM
+title AIMODS IDM Activation
 
 echo:
-echo Iniziamo...
+echo Let's get started...
 
 :: Check PowerShell
 %psc% $ExecutionContext.SessionState.LanguageMode >nul 2>&1 || (
@@ -408,9 +391,6 @@ exit /b
 
 ::========================================================================================================================================
 
-Here's an improved and translated version of the provided batch script:
-
-```batch
 :_activate
 
 cls
@@ -481,6 +461,7 @@ echo:
 call :_color %Gray% "If a fake serial screen is displayed, run the activation option again and do not use the restore option."
 
 ::========================================================================================================================================
+::========================================================================================================================================
 
 :done
 
@@ -510,7 +491,6 @@ if defined terminal (
     pause %nul1%
 )
 exit /b
-```
 ::========================================================================================================================================
 
 :_rcont
@@ -595,16 +575,18 @@ if "%errorlevel%"=="0" (
     call :_color2 %Red% "Failed - !reg!"
 )
 exit /b
-
 ::========================================================================================================================================
-
 #regscan:
 $finalValues = @()
 
-$explorerProc = Get-Process -Name explorer | Where-Object {$_.SessionId -eq (Get-Process -Id $pid).SessionId} | Select-Object -First 1
+# Get the current user's SID
+$explorerProc = Get-Process -Name explorer | Where-Object { $_.SessionId -eq (Get-Process -Id $pid).SessionId } | Select-Object -First 1
 $sid = (Get-WmiObject -Query "Select * From Win32_Process Where ProcessID='$($explorerProc.Id)'").GetOwnerSid().Sid
 
+# Determine the system architecture
 $arch = (Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment').PROCESSOR_ARCHITECTURE
+
+# Define registry paths based on system architecture
 if ($arch -eq "x86") {
     $regPaths = @("HKCU:\Software\Classes\CLSID", "Registry::HKEY_USERS\$sid\Software\Classes\CLSID")
 } else {
@@ -612,6 +594,7 @@ if ($arch -eq "x86") {
 }
 
 foreach ($regPath in $regPaths) {
+    # Skip HKEY_USERS path if $HKCUsync is defined
     if (($regPath -match "HKEY_USERS") -and ($HKCUsync -ne $null)) {
         continue
     }
@@ -620,6 +603,7 @@ foreach ($regPath in $regPaths) {
     Write-Host "Searching IDM CLSID Registry Keys in $regPath"
     Write-Host
 
+    # Retrieve subkeys matching the CLSID pattern
     $subKeys = Get-ChildItem -Path $regPath -ErrorAction SilentlyContinue -ErrorVariable lockedKeys | Where-Object { $_.PSChildName -match '^{[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}}$' }
 
     foreach ($lockedKey in $lockedKeys) {
@@ -628,6 +612,7 @@ foreach ($regPath in $regPaths) {
         Write-Output "$leafValue - Found Locked Key"
     }
 
+    # Continue to the next registry path if no subkeys are found
     if ($subKeys -eq $null) {
         continue
     }
@@ -734,25 +719,23 @@ function Take-Permissions {
     $acl.SetOwner($Admin)
     $key.SetAccessControl($acl)
 
-    # Open registry key again and grant FullControl to Everyone
-    $key = $key.OpenSubKey('', 'ReadWriteSubTree', 'ChangePermissions')
-    $rule = New-Object System.Security.AccessControl.RegistryAccessRule($everyone, 'FullControl', 'ContainerInherit', 'None', 'Allow')
-    $acl.ResetAccessRule($rule)
+ # Open registry key again and grant FullControl to Everyone
+$key = $key.OpenSubKey('', 'ReadWriteSubTree', 'ChangePermissions')
+$rule = New-Object System.Security.AccessControl.RegistryAccessRule($everyone, 'FullControl', 'ContainerInherit', 'None', 'Allow')
+$acl.ResetAccessRule($rule)
+$key.SetAccessControl($acl)
+
+# If lockKey is specified, set owner to None and deny FullControl to Everyone
+if ($lockKey -ne $null) {
+    $acl = New-Object System.Security.AccessControl.RegistrySecurity
+    $acl.SetOwner($none)
     $key.SetAccessControl($acl)
 
-    # If lockKey is specified, set owner to None and deny FullControl to Everyone
-    if ($lockKey -ne $null) {
-        $acl = New-Object System.Security.AccessControl.RegistrySecurity
-        $acl.SetOwner($none)
-        $key.SetAccessControl($acl)
-
-        $key = $key.OpenSubKey('', 'ReadWriteSubTree', 'ChangePermissions')
-        $rule = New-Object System.Security.AccessControl.RegistryAccessRule($everyone, 'FullControl', 'Deny')
-        $acl.ResetAccessRule($rule)
-        $key.SetAccessControl($acl)
-    }
+    $key = $key.OpenSubKey('', 'ReadWriteSubTree', 'ChangePermissions')
+    $rule = New-Object System.Security.AccessControl.RegistryAccessRule($everyone, 'FullControl', 'Deny')
+    $acl.ResetAccessRule($rule)
+    $key.SetAccessControl($acl)
 }
-
 
 foreach ($regPath in $regPaths) {
     if ($regPath -match "HKEY_USERS" -and $HKCUsync -ne $null) {
@@ -770,7 +753,7 @@ foreach ($regPath in $regPaths) {
             if (-not (Test-Path -Path $fullPath -ErrorAction SilentlyContinue)) {
                 New-Item -Path $fullPath -Force -ErrorAction SilentlyContinue | Out-Null
             }
-            
+
             Take-Permissions -RootKey $rootKey -RegKey $regKey
 
             try {
@@ -802,42 +785,68 @@ foreach ($regPath in $regPaths) {
     }
 }
 
-:regscan:
+#regscan:
 
 ::========================================================================================================================================
+# Function to set console colors
+function Set-ConsoleColor {
+    param (
+        [string]$BackgroundColor,
+        [string]$ForegroundColor,
+        [string]$Object,
+        [bool]$NoNewline = $false
+    )
 
-:_color
+    if ($_NCS -eq 1) {
+        echo "$esc[$($BackgroundColor + $ForegroundColor)$esc[0m"
+    } else {
+        $pscArgs = @{
+            'BackgroundColor' = $BackgroundColor
+            'ForegroundColor' = $ForegroundColor
+            'Object' = $Object
+        }
 
-if ($_NCS -eq 1) {
-    echo $esc[$($1 + $2)$esc[0m
-} else {
-    $pscArgs = @{
-        'BackgroundColor' = $1
-        'ForegroundColor' = $2
-        'Object' = $3
+        if ($NoNewline) {
+            $pscArgs['NoNewline'] = $true
+            $psc.Write-Host @pscArgs
+        } else {
+            $psc.Write-Host @pscArgs
+        }
     }
-    $psc.Write-Host @pscArgs
+
+    exit /b
 }
-exit /b
 
-:_color2
+# Function to set console colors with separate background and foreground
+function Set-ConsoleColor2 {
+    param (
+        [string]$BackgroundColor1,
+        [string]$ForegroundColor1,
+        [string]$Object,
+        [string]$BackgroundColor2,
+        [string]$ForegroundColor2
+    )
 
-if ($_NCS -eq 1) {
-    echo $esc[$($1 + $2)$esc[$($3 + $4)$esc[0m
-} else {
-    $pscArgs = @{
-        'BackgroundColor' = $1
-        'ForegroundColor' = $2
-        'Object' = $3
-        'NoNewline' = $true
+    if ($_NCS -eq 1) {
+        echo "$esc[$($BackgroundColor1 + $ForegroundColor1)$esc[$($BackgroundColor2 + $ForegroundColor2)$esc[0m"
+    } else {
+        $pscArgs = @{
+            'BackgroundColor' = $BackgroundColor1
+            'ForegroundColor' = $ForegroundColor1
+            'Object' = $Object
+            'NoNewline' = $true
+        }
+        $psc.Write-Host @pscArgs
+
+        $pscArgs['NoNewline'] = $false
+        $pscArgs['BackgroundColor'] = $BackgroundColor2
+        $pscArgs['ForegroundColor'] = $ForegroundColor2
+        $psc.Write-Host @pscArgs
     }
-    $psc.Write-Host @pscArgs
-    $pscArgs['NoNewline'] = $false
-    $pscArgs['BackgroundColor'] = $3
-    $pscArgs['ForegroundColor'] = $4
-    $pscArgs['Object'] = $5
-    $psc.Write-Host @pscArgs
-}
-exit /b
 
-::========================================================================================================================================
+    exit /b
+}
+
+# Example of using the functions
+Set-ConsoleColor -BackgroundColor 'DarkBlue' -ForegroundColor 'White' -Object 'Hello, World!'
+Set-ConsoleColor2 -BackgroundColor1 'DarkBlue' -ForegroundColor1 'White' -Object 'Hello, ' -BackgroundColor2 'DarkGreen' -ForegroundColor2 'Yellow' -Object 'World!'
