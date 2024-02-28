@@ -26,7 +26,6 @@ set _freeze=1
 set _reset=0
 
 ::  If value is changed in above lines or parameter is used then script will run in unattended mode
-set name=AIMODS
 
 ::========================================================================================================================================
 
